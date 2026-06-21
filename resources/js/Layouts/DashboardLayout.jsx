@@ -102,7 +102,7 @@ export default function Layout({ children }) {
 							</a>
 						</div>
 						<div className="col-2 d-flex justify-content-center align-items-center gap-3 flex-wrap">
-							<a href="" className="">
+							<a href={route('game')} className={route().current('game') ? 'active' : ''}>
                                 <i className="fas fa-gamepad"></i>
 								<p>Játék</p>
 							</a>

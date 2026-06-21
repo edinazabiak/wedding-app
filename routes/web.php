@@ -8,6 +8,7 @@ Route::get('/kepfeltoltes',	[Controller::class, 'photoUpload'])->name('photoUplo
 Route::get('/vendeg',		[Controller::class, 'guest'])->name('guest');
 Route::get('/menetrend',	[Controller::class, 'timeline'])->name('timeline');
 Route::get('/szolgaltatok',	[Controller::class, 'serviceProviders'])->name('serviceProviders');
+Route::get('/jatek',        [Controller::class, 'game'])->name('game');
 
 Route::get('/test-upload', function () {
 

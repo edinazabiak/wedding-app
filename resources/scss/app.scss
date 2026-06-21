@@ -143,8 +143,9 @@ main {
 		}
 
 		.drag-body {
-			background-color: rgba($light, 0.75);
+			background-color: rgba($light, 0.5);
 			border: 1px solid rgba($primary, 0.15);
+			backdrop-filter: blur(3px);
 			border-radius: 10px;
 			color: $dark;
 			padding: 1rem;
@@ -207,6 +208,8 @@ main {
 		border-color: rgba($primary, 0.15);
 		text-align: center;
 		margin-bottom: 1rem;
+		backdrop-filter: blur(3px);
+		background-color: rgba($light, 0.5);
 
 		.accordion-header {
 			font-size: 1.5rem;
@@ -300,6 +303,94 @@ main {
 		&:last-of-type {
 			.timeline-line {
 				background: linear-gradient(0deg,#0000 20%, $primary 100%);
+			}
+		}
+	}
+
+	.welcome-message {
+		input,
+		input:active,
+		input:focus {
+			background-color: rgba($light, 0.5);
+			backdrop-filter: blur(3px);
+		}
+	}
+
+	.quiz-container {
+		.quiz-header {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			.quiz-top {
+				background-color: $primary;
+				color: $light;
+				border-top-left-radius: 360px;
+				border-top-right-radius: 360px;
+				font-size: 1.5rem;
+				font-weight: bold;
+				width: 100%;
+				max-width: 100px;
+				padding: .5rem .5rem 0 .5rem;
+			}
+
+			.quiz-title {
+				background-color: $primary;
+				color: $light;
+				font-size: 1.2rem;
+				font-weight: bold;
+				text-align: center;
+				margin-bottom: 1rem;
+				padding: 1rem;
+				border-radius: 360px;
+				width: 100%;
+				max-width: 500px;
+			}
+		}
+
+		p {
+			margin-bottom: 0;
+		}
+
+		.answers {
+			display: flex;
+			flex-direction: column;
+
+			.answer-body {
+				display: flex;
+				flex-direction: row;
+				background-color: rgba($light, 0.5);
+				backdrop-filter: blur(3px);
+				border: 1px solid rgba($primary, 0.15);
+				border-radius: 360px;
+				padding: 1rem;
+				margin-bottom: 1rem;
+
+				.answer-letter {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 30px;
+					height: 30px;
+					text-align: left;
+					background-color: $secondary;
+					border-radius: 360px;
+					color: $light;
+					font-weight: bold;
+				}
+
+				.answer-text {
+					width: calc(100% - 30px);
+					text-align: center;
+				}
+
+				&:hover, 
+				&:focus,
+				&:active {
+					background-color: rgba($secondary, 0.15);
+					cursor: pointer;
+				}
 			}
 		}
 	}
