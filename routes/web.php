@@ -10,6 +10,9 @@ Route::get('/menetrend',	[Controller::class, 'timeline'])->name('timeline');
 Route::get('/szolgaltatok',	[Controller::class, 'serviceProviders'])->name('serviceProviders');
 Route::get('/jatek',        [Controller::class, 'game'])->name('game');
 
+Route::post('/validation',  [Controller::class, 'validation'])->name('validation');
+Route::post('/save-result', [Controller::class, 'saveResult'])->name('saveResult');
+
 Route::get('/test-upload', function () {
 
     Storage::disk('s3')->put(
