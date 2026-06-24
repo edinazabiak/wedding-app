@@ -8,25 +8,25 @@ function Game({ quiz }) {
 	const [userName, setUserName] = useState(localStorage.getItem('user_name') || null);
 	const [answers, setAnswers] = useState(JSON.parse(localStorage.getItem('answers')) || []);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	const [score, setScore] = useState(0);
-	const [results, setResults] = useState(localStorage.getItem('result') || false);
+	const [score, setScore] = useState(parseInt(localStorage.getItem('score')) || 0);
+	const [isDone, setIsDone] = useState(localStorage.getItem('result') || false);
+	const [results, setResults] = useState([]);
 	
 	const startGame = (e) => {
 		const name = e.target.previousElementSibling.value.trim();
 
-		// check if name is not empty and unique (not already in database)
 		axios.post(route('validation'), { name })
 			.then(response => {
-				if (response.data.unique) {
+				if (response.status === 200) {
 					setUserName(name);
 					localStorage.setItem('user_name', name);
 					localStorage.setItem('answers', JSON.stringify(createAnswersArray()));
-				} else {
-					alert('Ez a név már foglalt. Kérlek, válassz másikat!');
 				}
 			})
 			.catch(error => {
-				console.error('Hiba történt a név ellenőrzése során:', error);
+				if (error.response && error.response.status === 422) {
+					alert(error.response.data.message);
+				}
 			});
 	};
 
@@ -51,22 +51,35 @@ function Game({ quiz }) {
 			setScore(score + 1);
 		}
 		setCurrentQuestionIndex(currentQuestionIndex + 1);
+		localStorage.setItem('score', score + (selectedOption === correctAnswer ? 1 : 0));
 
 		if (currentQuestionIndex + 1 >= quiz.length) {
 			localStorage.setItem('result', true);
 			setCurrentQuestionIndex(0);
-			setResults(true);
+			setIsDone(true);
 
-			// eredmény elmentése az adatbázisba
 			axios.post(route('saveResult'), {
 				name: userName,
-				score: score + (selectedOption === correctAnswer ? 1 : 0) // add the last question's score
+				answers: answersArray,
+				score: score + (selectedOption === correctAnswer ? 1 : 0)
 			}).then(response => {
 				console.log('Eredmény elmentve:', response.data);
 			}).catch(error => {
 				console.error('Hiba történt az eredmény mentése során:', error);
 			});
+
+			loadResults();
 		}
+	};
+
+	const loadResults = () => {
+		axios.get(route('results'))
+			.then(response => {
+				setResults(response.data);
+			})
+			.catch(error => {
+				console.error('Hiba történt az eredmények lekérése során:', error);
+			});
 	};
 
 	useEffect(() => {
@@ -78,8 +91,12 @@ function Game({ quiz }) {
 				setCurrentQuestionIndex(answers.indexOf(firstNullAnswer));
 			} else {
 				localStorage.setItem('result', true);
-				setResults(true);
+				setIsDone(true);
 			}
+		}
+
+		if (isDone) {
+			loadResults();
 		}
 	}, []);
 
@@ -88,7 +105,7 @@ function Game({ quiz }) {
 			<section className="applications container my-3">
 				<div className="row flex-column justify-content-center align-items-center">
 					<div className="col-12 px-3 text-center">
-						{ userName === null && !results ? (
+						{ userName === null && !isDone ? (
 							<div className="welcome-message">
 								<p>Szia! Szeretnéd letesztelni, hogy mennyire ismersz minket? Add meg a nevedet (felismerhető legyen), és töltsd ki a tesztünket! Jól gondold át a válaszokat, mert egy készülékkel csak egyszer játszthatsz.</p>
 								<p>Az az illető, aki a legtöbb pontszámot gyűjti, a menyasszony tánc után <mark>ajándékban</mark> részesül! </p>
@@ -97,7 +114,7 @@ function Game({ quiz }) {
 								<button className="btn btn-primary" onClick={startGame}>Kezdődjön a játék!</button>
 							</div>
 						) : (
-							!results ? (
+							!isDone ? (
 								<div className="quiz-container">
 									<div className="quiz-header">
 										<div className="quiz-top">
@@ -131,6 +148,16 @@ function Game({ quiz }) {
 							) : (
 								<div className="quiz-result">
 									<p>Gratulálunk, {userName}! A teszt kitöltésével <mark>{score}</mark> pontot szereztél!</p>
+									<p>A lenti táblázatban a 10 legtöbb pontot szerzett játékos eredményei láthatóak:</p>
+									<div className="row">
+										{results.map((result, index) => (
+											<div className="col-12 scoreboard-item" key={index}>
+												<p className="scoreboard-rank">{index + 1}.</p>
+												<p className="scoreboard-name">{result.name}</p>
+												<p className="scoreboard-score">{result.score} pont</p>
+											</div>
+										))}
+									</div>
 								</div>
 							)
 						)}

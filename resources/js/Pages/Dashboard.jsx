@@ -17,7 +17,7 @@ function Dashboard() {
                         <p>
                             Az esküvő során készült képeket és videókat feltöltheted és megtekintheted a <mark>Galéria</mark> menüpontban, akár a lagzi utáni napokban is.
                         </p>
-                        <p>Ha pedig esetleg unatkoznál, a <mark>Játék</mark> menüpontban próbára teheted a tudásodat, hogy mennyire is ismersz minket!
+                        <p>Ha pedig esetleg unatkoznál, a <mark>Játék</mark> menüpontban próbára teheted a tudásodat, hogy mennyire is ismersz minket! A legnagyobb pontszámot elért játékos a menyasszony tánc után <mark>ajándékban</mark> részesül!
                         </p>
                         <p className="mt-5">
                             Ha bármelyik szolgáltatónkkal elégedett vagy, a lenti gombra kattintva értékelheted őket, amiket később át tudunk adni nekik!

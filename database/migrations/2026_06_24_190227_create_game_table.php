@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->json('answers');
-            $table->boolean('is_done')->default(false);
+            $table->string('score')->default('0');
             $table->timestamps();
         });
     }
